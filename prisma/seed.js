@@ -1,4 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
+const bcrypt = require('bcrypt');
 const prisma = new PrismaClient();
 
 async function main() {
@@ -17,12 +18,13 @@ async function main() {
     fasilitasRecords.push(created);
   }
 
-  // 2. Tambahkan User
+  // 2. Tambahkan User dengan hashed password
+  const hashedPassword = await bcrypt.hash("123admin", 10);
   const admin = await prisma.user.create({
     data: {
       name: "admin",
       email: "admin@gmail.com",
-      password: "123admin",
+      password: hashedPassword,
     },
   });
 

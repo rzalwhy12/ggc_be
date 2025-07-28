@@ -82,7 +82,9 @@ model LowonganPekerjaan {
   lokasi      String   
   deskripsi   String   
   kualifikasi String   
-  gaji        String?  
+  gaji        String?
+  deadline    DateTime
+  jenis       String
   createdAt   DateTime @default(now())
 }
 

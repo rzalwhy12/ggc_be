@@ -47,35 +47,56 @@ const getLokerById = async (req, res) => {
 
 // ✅ Tambah lowongan baru
 const createLoker = async (req, res) => {
-    const {
-        posisi,
-        perusahaan,
-        lokasi,
-        deskripsi,
-        kualifikasi,
-        jenis,
-        gaji,
-        deadline
-    } = req.body;
+    const { posisi, lokasi, deskripsi, kualifikasi, jenis, gaji, deadline, perusahaan } = req.body;
+
+    console.log('=== DEBUG CREATE LOKER ===');
+    console.log('Request body:', req.body);
+    console.log('Posisi:', posisi);
+    console.log('Deadline:', deadline);
+    console.log('Deadline type:', typeof deadline);
+
+    // Validasi input
+    if (!posisi || !lokasi || !deskripsi || !kualifikasi || !jenis || !deadline) {
+        return res.status(400).json({
+            error: "Semua field wajib diisi",
+            missing: {
+                posisi: !posisi,
+                lokasi: !lokasi,
+                deskripsi: !deskripsi,
+                kualifikasi: !kualifikasi,
+                jenis: !jenis,
+                deadline: !deadline
+            }
+        });
+    }
 
     try {
         const newLoker = await prisma.lowonganPekerjaan.create({
             data: {
                 posisi,
-                perusahaan,
                 lokasi,
                 deskripsi,
                 kualifikasi,
                 jenis,
-                gaji,
+                gaji: gaji || null,
                 deadline: new Date(deadline),
+                perusahaan: perusahaan || "Tidak disebutkan",
             },
         });
 
+        console.log('Created loker:', newLoker);
         res.status(201).json(newLoker);
     } catch (error) {
+        console.error('=== PRISMA ERROR ===');
+        console.error('Error:', error);
+        console.error('Error message:', error.message);
+        console.error('Error code:', error.code);
+        console.error('Error meta:', error.meta);
+        
         res.status(500).json({
-            error: "Gagal menambahkan lowongan"
+            error: "Gagal menambahkan lowongan",
+            detail: error.message,
+            code: error.code
         });
     }
 };

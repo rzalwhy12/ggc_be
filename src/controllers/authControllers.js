@@ -26,16 +26,20 @@ const register = async (req, res) => {
 const login = async (req, res) => {
     const { email, password } = req.body;
     try {
+        console.log('Login attempt:', { email, password }); // Debug log
         const user = await prisma.user.findUnique({ where: { email } });
         if (!user) return res.status(404).json({ error: 'User not found' });
 
+        console.log('User found:', user.email); // Debug log
         const isValid = await bcrypt.compare(password, user.password);
+        console.log('Password valid:', isValid); // Debug log
+        
         if (!isValid) return res.status(401).json({ error: 'Invalid credentials' });
 
-        // Don't send password back
         const { password: _, ...userData } = user;
         res.status(200).json(userData);
     } catch (error) {
+        console.error('Login error:', error);
         res.status(500).json({ error: 'Login failed' });
     }
 };

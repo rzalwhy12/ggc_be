@@ -18,15 +18,21 @@ const uploadToCloudinary = (buffer, folder) => {
 
 const createPerumahan = async (req, res) => {
   try {
-    const { nama, lokasi, type, hargaMulai, deskripsi, spesifikasi, fasilitasIds } =
-      req.body;
+    const {
+      nama,
+      lokasi,
+      type,
+      hargaMulai,
+      deskripsi,
+      spesifikasi,
+      fasilitasIds,
+    } = req.body;
 
     // Validasi data dasar
     if (
       !nama ||
       !lokasi ||
-      !type |
-      !hargaMulai ||
+      !type | !hargaMulai ||
       !deskripsi ||
       !spesifikasi ||
       !fasilitasIds
@@ -163,8 +169,15 @@ const createPerumahan = async (req, res) => {
 
 const updatePerumahan = async (req, res) => {
   try {
-    const { nama, lokasi, type, hargaMulai, deskripsi, spesifikasi, fasilitasIds } =
-      req.body;
+    const {
+      nama,
+      lokasi,
+      type,
+      hargaMulai,
+      deskripsi,
+      spesifikasi,
+      fasilitasIds,
+    } = req.body;
 
     const { id } = req.params;
 
@@ -429,10 +442,17 @@ const filterPerumahan = async (req, res) => {
             : fasilitasIds;
 
         if (!Array.isArray(parsedFasilitasIds)) {
-          return res.status(400).json({ error: "Format fasilitasIds harus berupa array" });
+          return res
+            .status(400)
+            .json({ error: "Format fasilitasIds harus berupa array" });
         }
       } catch (e) {
-        return res.status(400).json({ error: "Format fasilitasIds tidak valid", detail: e.message });
+        return res
+          .status(400)
+          .json({
+            error: "Format fasilitasIds tidak valid",
+            detail: e.message,
+          });
       }
 
       fasilitasFilter = {
@@ -469,11 +489,11 @@ const filterPerumahan = async (req, res) => {
     });
   } catch (error) {
     console.error("Error filterPerumahan:", error);
-    res.status(500).json({ error: "Terjadi kesalahan saat memfilter perumahan" });
+    res
+      .status(500)
+      .json({ error: "Terjadi kesalahan saat memfilter perumahan" });
   }
 };
-
-
 
 module.exports = {
   createPerumahan,
